@@ -13,18 +13,34 @@ import CurrencyConverterModal from './components/CurrencyConverterModal';
 import BudgetModal from './components/BudgetModal';
 import ExportReportModal from './components/ExportReportModal';
 import ReportPrintView from './components/ReportPrintView';
+import AuthScreen from './components/AuthScreen';
 import { loadAppData, saveAppData } from './utils/storage';
 import { convertCurrency } from './utils/currencyEngine';
+import { getCurrentSession, logoutUser } from './utils/auth';
 import {
   LayoutDashboard, ShieldCheck, PieChart, Sparkles,
   Receipt, Wallet
 } from 'lucide-react';
 
 export default function App() {
+  const [userSession, setUserSession] = useState(() => getCurrentSession());
   const [data, setData] = useState(() => loadAppData());
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses', 'fixed', 'analytics'
-  const [isDark, setIsDark] = useState(true);
+  
+  // Theme state with localStorage persistence
+  const [isDark, setIsDark] = useState(() => {
+    const saved = localStorage.getItem('masroufi_theme');
+    return saved ? saved === 'dark' : true;
+  });
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const next = !prev;
+      localStorage.setItem('masroufi_theme', next ? 'dark' : 'light');
+      return next;
+    });
+  };
 
   // Modals state
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
@@ -54,15 +70,25 @@ export default function App() {
     setTimeout(() => setToastMsg(''), 3000);
   };
 
-  // Toggle dark/light theme
+  // Toggle dark/light class on documentElement
   useEffect(() => {
     const root = document.documentElement;
     if (isDark) {
       root.classList.add('dark');
+      root.classList.remove('light');
     } else {
       root.classList.remove('dark');
+      root.classList.add('light');
     }
   }, [isDark]);
+
+  const handleLogout = () => {
+    if (window.confirm('هل أنت متأكد من تسجيل الخروج من حسابك؟')) {
+      logoutUser();
+      setUserSession(null);
+      showToast('✓ تم تسجيل الخروج بنجاح');
+    }
+  };
 
   const baseCurrency = data.baseCurrency || 'SAR';
   const customRates = data.currencyRates || {};
@@ -199,13 +225,31 @@ export default function App() {
     showToast('✓ تمت استعادة النسخة الاحتياطية بنجاح');
   };
 
+  // If not logged in, render the AuthScreen
+  if (!userSession) {
+    return (
+      <AuthScreen
+        onLoginSuccess={(session) => {
+          setUserSession(session);
+          showToast(`مرحباً بك مجدداً، ${session.fullName || session.email}`);
+        }}
+        isDark={isDark}
+        onToggleTheme={toggleTheme}
+      />
+    );
+  }
+
   return (
     <div className={`min-h-screen ${isDark ? 'bg-mesh text-slate-100' : 'bg-slate-50 text-slate-900'} transition-colors font-sans selection:bg-emerald-500 selection:text-white`}>
       
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-6 left-6 z-50 bg-slate-900 border border-emerald-500/40 text-emerald-400 font-extrabold text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 animate-in slide-in-from-bottom duration-300">
-          <Sparkles className="w-4 h-4 text-emerald-400 animate-spin" />
+        <div className={`fixed bottom-6 left-6 z-50 border font-extrabold text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 animate-in slide-in-from-bottom duration-300 ${
+          isDark
+            ? 'bg-slate-900 border-emerald-500/40 text-emerald-400'
+            : 'bg-white border-emerald-300 text-emerald-700 shadow-slate-200'
+        }`}>
+          <Sparkles className="w-4 h-4 text-emerald-500 animate-spin" />
           <span>{toastMsg}</span>
         </div>
       )}
@@ -227,7 +271,9 @@ export default function App() {
         onOpenBudgetModal={() => setIsBudgetModalOpen(true)}
         onOpenExportModal={() => setIsExportModalOpen(true)}
         isDark={isDark}
-        onToggleTheme={() => setIsDark(!isDark)}
+        onToggleTheme={toggleTheme}
+        userSession={userSession}
+        onLogout={handleLogout}
       />
 
       {/* Main Container */}
@@ -287,18 +333,22 @@ export default function App() {
         />
 
         {/* 5. Navigation Tabs */}
-        <div className="flex items-center gap-2 border-b border-slate-800/80 pb-3 no-print pt-2">
+        <div className={`flex items-center gap-2 border-b pb-3 no-print pt-2 ${
+          isDark ? 'border-slate-800/80' : 'border-slate-200'
+        }`}>
           <button
             onClick={() => setActiveTab('expenses')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'expenses'
                 ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             <Receipt className="w-4 h-4" />
             <span>المصروفات اليومية</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/50 font-mono">
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
+              isDark ? 'bg-slate-950/50' : 'bg-slate-100 text-slate-700'
+            }`}>
               {currentMonthExpenses.length}
             </span>
           </button>
@@ -308,12 +358,14 @@ export default function App() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'fixed'
                 ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
             <span>الثوابت والالتزامات</span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-950/50 font-mono">
+            <span className={`text-[10px] px-2 py-0.5 rounded-full font-mono ${
+              isDark ? 'bg-slate-950/50' : 'bg-slate-100 text-slate-700'
+            }`}>
               {data.fixedExpenses.length}
             </span>
           </button>
@@ -323,7 +375,7 @@ export default function App() {
             className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'analytics'
                 ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/25'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
+                : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             <PieChart className="w-4 h-4" />
