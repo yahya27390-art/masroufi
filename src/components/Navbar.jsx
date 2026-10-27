@@ -4,6 +4,7 @@ import {
   Target, Sun, Moon, Calendar, Coins, User, LogOut
 } from 'lucide-react';
 import { DEFAULT_CURRENCIES } from '../utils/currencyEngine';
+import masroufiLogo from '../assets/logo.png';
 
 export default function Navbar({
   selectedMonth,
@@ -32,9 +33,9 @@ export default function Navbar({
         {/* Brand Logo & Name */}
         <div className="flex items-center gap-3">
           <img
-            src="/logo.png"
+            src={masroufiLogo}
             alt="شعار مصروفي"
-            className="w-12 h-12 object-contain rounded-2xl shadow-md p-1 border border-slate-200 bg-white"
+            className="w-12 h-12 object-contain rounded-2xl shadow-md p-1 border border-emerald-500/20 bg-white hover:scale-105 transition-transform"
           />
           <div>
             <div className="flex items-center gap-2">

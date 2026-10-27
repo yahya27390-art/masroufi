@@ -4,6 +4,7 @@ import {
   ShieldCheck, Coins, Sparkles, CreditCard, ChevronRight
 } from 'lucide-react';
 import { formatMoney, convertCurrency } from '../utils/currencyEngine';
+import masroufiLogo from '../assets/logo.png';
 
 export default function HeroCard({
   totalExpenses,
@@ -49,7 +50,7 @@ export default function HeroCard({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <img
-              src="/logo.png"
+              src={masroufiLogo}
               alt="مصروفي"
               className="w-14 h-14 object-contain rounded-2xl bg-white p-1 border border-white/30 shadow-lg"
             />

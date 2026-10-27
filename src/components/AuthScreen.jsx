@@ -4,6 +4,7 @@ import {
   ShieldCheck, Sparkles, Sun, Moon, CheckCircle2
 } from 'lucide-react';
 import { loginUser, registerUser } from '../utils/auth';
+import masroufiLogo from '../assets/logo.png';
 
 export default function AuthScreen({ onLoginSuccess, isDark, onToggleTheme }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -78,9 +79,9 @@ export default function AuthScreen({ onLoginSuccess, isDark, onToggleTheme }) {
             <div className="relative inline-block mb-4">
               <div className="absolute inset-0 rounded-3xl bg-emerald-500/25 blur-2xl"></div>
               <img
-                src="/logo.png"
+                src={masroufiLogo}
                 alt="شعار مصروفي"
-                className="relative w-28 h-28 object-contain rounded-3xl p-2 border border-white/20 shadow-2xl mx-auto bg-white"
+                className="relative w-32 h-32 object-contain rounded-3xl p-2.5 border-2 border-emerald-500/30 shadow-2xl mx-auto bg-white hover:scale-105 transition-transform duration-300"
               />
             </div>
 
