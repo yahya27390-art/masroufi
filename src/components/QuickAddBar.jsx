@@ -41,13 +41,13 @@ export default function QuickAddBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="glass-panel rounded-2xl p-3 sm:p-4 border border-slate-800 flex flex-wrap items-center justify-between gap-3 no-print"
+      className="glass-panel card-shine rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 shadow-md hover:shadow-xl transition-all duration-300 no-print"
     >
       <div className="flex items-center gap-2 shrink-0">
-        <div className="w-7 h-7 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center">
-          <Zap className="w-3.5 h-3.5" />
+        <div className="w-8 h-8 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-inner">
+          <Zap className="w-4 h-4 animate-bounce" style={{ animationDuration: '2s' }} />
         </div>
-        <span className="text-xs font-black text-slate-200">تسجيل فوري سريع:</span>
+        <span className="text-xs font-black text-slate-800 dark:text-slate-200">تسجيل فوري سريع:</span>
       </div>
 
       {/* Input Title */}
@@ -57,12 +57,12 @@ export default function QuickAddBar({
           placeholder="بيان المصروف (قهوة، بنزين، غداء...)"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-full bg-slate-950/80 border border-slate-800 focus:border-emerald-500 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none transition"
+          className="w-full bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 placeholder:text-slate-400 outline-none transition shadow-inner"
         />
       </div>
 
       {/* Input Amount */}
-      <div className="w-28 shrink-0">
+      <div className="w-32 shrink-0">
         <div className="relative">
           <input
             type="number"
@@ -71,9 +71,9 @@ export default function QuickAddBar({
             placeholder="المبلغ"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
-            className="w-full bg-slate-950/80 border border-slate-800 focus:border-emerald-500 rounded-xl px-3 py-2 text-xs font-bold text-slate-100 outline-none transition font-mono"
+            className="w-full bg-white dark:bg-slate-950/80 border border-slate-300 dark:border-slate-800 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 rounded-xl px-3.5 py-2 text-xs font-bold text-slate-900 dark:text-slate-100 placeholder:text-slate-400 outline-none transition font-mono shadow-inner"
           />
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-500 font-bold pointer-events-none">
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-emerald-600 dark:text-emerald-400 font-extrabold pointer-events-none">
             {baseCurrency}
           </span>
         </div>
@@ -88,13 +88,13 @@ export default function QuickAddBar({
               key={cat.id}
               type="button"
               onClick={() => setCategoryId(cat.id)}
-              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all duration-200 shrink-0 hover:scale-105 active:scale-95 ${
                 isSelected
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-slate-900 text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                  ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md shadow-emerald-500/30'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800'
               }`}
             >
-              <CategoryIcon name={cat.icon} className="w-3 h-3" style={{ color: isSelected ? '#ffffff' : cat.color }} />
+              <CategoryIcon name={cat.icon} className="w-3.5 h-3.5" style={{ color: isSelected ? '#ffffff' : cat.color }} />
               <span>{cat.name.split(' ')[0]}</span>
             </button>
           );
@@ -105,9 +105,9 @@ export default function QuickAddBar({
       <button
         type="submit"
         disabled={!title.trim() || !amount}
-        className="flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-extrabold text-xs px-4 py-2 rounded-xl transition shadow-md active:scale-95 shrink-0"
+        className="btn-shimmer btn-interactive flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 disabled:opacity-40 text-white font-black text-xs px-5 py-2.5 rounded-xl transition shadow-lg shadow-emerald-600/30 shrink-0"
       >
-        <Plus className="w-3.5 h-3.5" />
+        <Plus className="w-4 h-4" />
         <span>إضافة</span>
       </button>
     </form>

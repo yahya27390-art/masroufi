@@ -240,8 +240,15 @@ export default function App() {
   }
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-mesh text-slate-100' : 'bg-slate-50 text-slate-900'} transition-colors font-sans selection:bg-emerald-500 selection:text-white`}>
+    <div className={`min-h-screen ${isDark ? 'bg-mesh text-slate-100' : 'bg-slate-50 text-slate-900'} transition-colors font-sans selection:bg-emerald-500 selection:text-white relative overflow-x-hidden`}>
       
+      {/* Dynamic Animated Ambient Background Orbs */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-10 right-10 w-[420px] h-[420px] rounded-full bg-emerald-500/10 blur-[100px] animate-orb-1"></div>
+        <div className="absolute bottom-20 left-10 w-[500px] h-[500px] rounded-full bg-teal-500/10 blur-[110px] animate-orb-2"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-indigo-500/5 blur-[130px] animate-orb-3"></div>
+      </div>
+
       {/* Toast Notification */}
       {toastMsg && (
         <div className={`fixed bottom-6 left-6 z-50 border font-extrabold text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 animate-in slide-in-from-bottom duration-300 ${
@@ -277,70 +284,78 @@ export default function App() {
       />
 
       {/* Main Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6 relative z-10">
         
         {/* 1. Master Fintech Hero Card */}
-        <HeroCard
-          totalExpenses={totalExpensesInBase}
-          budget={data.monthlyBudget || 0}
-          fixedTotal={totalFixedInBase}
-          fixedPaidCount={fixedPaidCount}
-          fixedTotalCount={data.fixedExpenses.length}
-          baseCurrency={baseCurrency}
-          customRates={customRates}
-          selectedMonth={selectedMonth}
-          onOpenExpenseModal={() => {
-            setExpenseToEdit(null);
-            setIsExpenseModalOpen(true);
-          }}
-          onOpenFixedModal={() => {
-            setFixedToEdit(null);
-            setIsFixedModalOpen(true);
-          }}
-          onOpenCurrencyModal={() => setIsCurrencyModalOpen(true)}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.05s' }}>
+          <HeroCard
+            totalExpenses={totalExpensesInBase}
+            budget={data.monthlyBudget || 0}
+            fixedTotal={totalFixedInBase}
+            fixedPaidCount={fixedPaidCount}
+            fixedTotalCount={data.fixedExpenses.length}
+            baseCurrency={baseCurrency}
+            customRates={customRates}
+            selectedMonth={selectedMonth}
+            onOpenExpenseModal={() => {
+              setExpenseToEdit(null);
+              setIsExpenseModalOpen(true);
+            }}
+            onOpenFixedModal={() => {
+              setFixedToEdit(null);
+              setIsFixedModalOpen(true);
+            }}
+            onOpenCurrencyModal={() => setIsCurrencyModalOpen(true)}
+          />
+        </div>
 
         {/* 2. Quick Add Bar */}
-        <QuickAddBar
-          categories={data.categories}
-          baseCurrency={baseCurrency}
-          selectedMonth={selectedMonth}
-          onQuickAdd={handleSaveExpense}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.12s' }}>
+          <QuickAddBar
+            categories={data.categories}
+            baseCurrency={baseCurrency}
+            selectedMonth={selectedMonth}
+            onQuickAdd={handleSaveExpense}
+          />
+        </div>
 
         {/* 3. Metric Stat Cards */}
-        <StatCards
-          totalExpenses={totalExpensesInBase}
-          fixedTotal={totalFixedInBase}
-          fixedPaidCount={fixedPaidCount}
-          fixedTotalCount={data.fixedExpenses.length}
-          dailyAverage={dailyAverage}
-          budget={data.monthlyBudget || 0}
-          baseCurrency={baseCurrency}
-          daysInMonth={daysInMonth}
-          currentDay={currentDay}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.18s' }}>
+          <StatCards
+            totalExpenses={totalExpensesInBase}
+            fixedTotal={totalFixedInBase}
+            fixedPaidCount={fixedPaidCount}
+            fixedTotalCount={data.fixedExpenses.length}
+            dailyAverage={dailyAverage}
+            budget={data.monthlyBudget || 0}
+            baseCurrency={baseCurrency}
+            daysInMonth={daysInMonth}
+            currentDay={currentDay}
+          />
+        </div>
 
         {/* 4. Smart Insights AI Coach */}
-        <SmartInsights
-          expenses={currentMonthExpenses}
-          fixedExpenses={data.fixedExpenses}
-          categories={data.categories}
-          budget={data.monthlyBudget || 0}
-          baseCurrency={baseCurrency}
-          customRates={customRates}
-          selectedMonth={selectedMonth}
-        />
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.24s' }}>
+          <SmartInsights
+            expenses={currentMonthExpenses}
+            fixedExpenses={data.fixedExpenses}
+            categories={data.categories}
+            budget={data.monthlyBudget || 0}
+            baseCurrency={baseCurrency}
+            customRates={customRates}
+            selectedMonth={selectedMonth}
+          />
+        </div>
 
         {/* 5. Navigation Tabs */}
-        <div className={`flex items-center gap-2 border-b pb-3 no-print pt-2 ${
+        <div className={`animate-fade-in-up flex items-center gap-2 border-b pb-3 no-print pt-2 ${
           isDark ? 'border-slate-800/80' : 'border-slate-200'
-        }`}>
+        }`} style={{ animationDelay: '0.3s' }}>
           <button
             onClick={() => setActiveTab('expenses')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`btn-interactive flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'expenses'
-                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
+                ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
                 : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
@@ -355,9 +370,9 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('fixed')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`btn-interactive flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'fixed'
-                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
+                ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
                 : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
@@ -372,9 +387,9 @@ export default function App() {
 
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`btn-interactive flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
               activeTab === 'analytics'
-                ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/25'
+                ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-600/30'
                 : isDark ? 'text-slate-400 hover:text-slate-200 hover:bg-slate-900' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >

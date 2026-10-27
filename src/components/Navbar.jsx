@@ -87,7 +87,7 @@ export default function Navbar({
         <div className="flex items-center flex-wrap gap-2">
           <button
             onClick={onOpenExpenseModal}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl shadow-lg shadow-emerald-600/25 transition active:scale-95"
+            className="btn-shimmer btn-interactive flex items-center gap-1.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-600/30 shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>مصروف جديد</span>
@@ -95,7 +95,7 @@ export default function Navbar({
 
           <button
             onClick={onOpenFixedModal}
-            className="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-3 py-2 rounded-xl border border-indigo-500/30 transition shadow-sm active:scale-95"
+            className="btn-interactive flex items-center gap-1.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-xs px-3.5 py-2.5 rounded-xl border border-indigo-400/30 shadow-md shadow-indigo-600/20 shrink-0"
           >
             <Repeat className="w-4 h-4" />
             <span className="hidden sm:inline">إضافة</span>
@@ -104,10 +104,10 @@ export default function Navbar({
 
           <button
             onClick={onOpenCurrencyModal}
-            className={`flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border transition ${
+            className={`btn-interactive flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border shrink-0 ${
               isDark
-                ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border-slate-800'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
+                ? 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-amber-300 border-slate-800'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200 shadow-sm'
             }`}
             title="محول العملات المباشر"
           >
@@ -117,10 +117,10 @@ export default function Navbar({
 
           <button
             onClick={onOpenBudgetModal}
-            className={`flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border transition ${
+            className={`btn-interactive flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border shrink-0 ${
               isDark
-                ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-sky-300 border-slate-800'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
+                ? 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-sky-300 border-slate-800'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200 shadow-sm'
             }`}
             title="تحديد ميزانية الشهر"
           >
@@ -130,10 +130,10 @@ export default function Navbar({
 
           <button
             onClick={onOpenExportModal}
-            className={`flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border transition ${
+            className={`btn-interactive flex items-center gap-1.5 font-bold text-xs px-3 py-2 rounded-xl border shrink-0 ${
               isDark
-                ? 'bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border-slate-800'
-                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border-slate-200'
+                ? 'bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-emerald-300 border-slate-800'
+                : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200 shadow-sm'
             }`}
             title="تصدير إكسيل وطباعة التقارير"
           >
