@@ -24,7 +24,7 @@ import {
 
 export default function App() {
   const [userSession, setUserSession] = useState(() => getCurrentSession());
-  const [data, setData] = useState(() => loadAppData());
+  const [data, setData] = useState(() => loadAppData(userSession?.userId));
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses', 'fixed', 'analytics'
   
@@ -33,6 +33,13 @@ export default function App() {
     const saved = localStorage.getItem('masroufi_theme');
     return saved ? saved === 'dark' : true;
   });
+
+  // Reload user-isolated data when session changes
+  useEffect(() => {
+    if (userSession?.userId) {
+      setData(loadAppData(userSession.userId));
+    }
+  }, [userSession?.userId]);
 
   const toggleTheme = () => {
     setIsDark(prev => {
@@ -56,11 +63,11 @@ export default function App() {
 
   const [toastMsg, setToastMsg] = useState('');
 
-  // Persist data
+  // Persist data scoped strictly to current active user
   const updateData = (updater) => {
     setData(prev => {
       const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveAppData(next);
+      saveAppData(next, userSession?.userId);
       return next;
     });
   };
@@ -231,7 +238,8 @@ export default function App() {
       <AuthScreen
         onLoginSuccess={(session) => {
           setUserSession(session);
-          showToast(`مرحباً بك مجدداً، ${session.fullName || session.email}`);
+          setData(loadAppData(session.userId));
+          showToast(`مرحباً بك، ${session.fullName || session.username || session.email}`);
         }}
         isDark={isDark}
         onToggleTheme={toggleTheme}

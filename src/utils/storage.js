@@ -33,15 +33,51 @@ const INITIAL_DATA = {
   categories: DEFAULT_CATEGORIES,
 };
 
-export function loadAppData() {
+export function getUserStorageKey(userId) {
+  if (!userId) return STORAGE_KEY;
+  return `masroufi_data_user_${userId}`;
+}
+
+export function loadAppData(userId) {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return INITIAL_DATA;
-    const parsed = JSON.parse(raw);
+    const key = getUserStorageKey(userId);
+    const raw = localStorage.getItem(key);
+
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        ...INITIAL_DATA,
+        ...parsed,
+        categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
+      };
+    }
+
+    // Migration fallback for existing user Yahya:
+    // If Yahya logs in and hasn't yet had his user-specific key written, migrate legacy global data
+    if (userId && (String(userId).includes('yahya') || userId === 'user_yahya')) {
+      const legacyRaw = localStorage.getItem(STORAGE_KEY);
+      if (legacyRaw) {
+        try {
+          const parsed = JSON.parse(legacyRaw);
+          const migrated = {
+            ...INITIAL_DATA,
+            ...parsed,
+            categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
+          };
+          localStorage.setItem(key, JSON.stringify(migrated));
+          return migrated;
+        } catch {
+          // ignore parsing error and continue
+        }
+      }
+    }
+
+    // For new users (like Emy Ali), provide a clean, blank slate
     return {
       ...INITIAL_DATA,
-      ...parsed,
-      categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
+      expenses: [],
+      fixedExpenses: [],
+      monthlyBudget: 0,
     };
   } catch (err) {
     console.error('Failed to load Masroufi data from localStorage:', err);
@@ -49,9 +85,10 @@ export function loadAppData() {
   }
 }
 
-export function saveAppData(data) {
+export function saveAppData(data, userId) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const key = getUserStorageKey(userId);
+    localStorage.setItem(key, JSON.stringify(data));
     window.dispatchEvent(new Event('masroufi-data-changed'));
     return true;
   } catch (err) {

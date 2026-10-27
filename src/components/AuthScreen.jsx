@@ -159,16 +159,16 @@ export default function AuthScreen({ onLoginSuccess, isDark, onToggleTheme }) {
               </div>
             )}
 
-            {/* Email */}
+            {/* Username or Email */}
             <div>
-              <label className="block text-xs font-bold mb-1.5 text-slate-300">البريد الإلكتروني</label>
+              <label className="block text-xs font-bold mb-1.5 text-slate-300">اسم المستخدم أو البريد الإلكتروني</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2" />
                 <input
-                  type="email"
+                  type="text"
                   required
                   dir="ltr"
-                  placeholder="name@example.com"
+                  placeholder="emy.ali أو name@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={`w-full rounded-xl pr-10 pl-4 py-2.5 text-xs font-bold outline-none border transition text-right ${
