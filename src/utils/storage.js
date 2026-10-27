@@ -38,41 +38,75 @@ export function getUserStorageKey(userId) {
   return `masroufi_data_user_${userId}`;
 }
 
-export function loadAppData(userId) {
+export function loadAppData(userId, userEmail) {
   try {
-    const key = getUserStorageKey(userId);
-    const raw = localStorage.getItem(key);
+    const isEmy = userId === 'user_emy_ali' || (userEmail && String(userEmail).toLowerCase().includes('emy'));
 
-    if (raw) {
-      const parsed = JSON.parse(raw);
+    // For Emy Ali, ALWAYS load Emy's strictly isolated partition
+    if (isEmy) {
+      const emyKey = getUserStorageKey(userId || 'user_emy_ali');
+      const emyRaw = localStorage.getItem(emyKey);
+      if (emyRaw) {
+        const parsed = JSON.parse(emyRaw);
+        return {
+          ...INITIAL_DATA,
+          ...parsed,
+          categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
+        };
+      }
       return {
         ...INITIAL_DATA,
-        ...parsed,
-        categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
+        expenses: [],
+        fixedExpenses: [],
+        monthlyBudget: 0,
       };
     }
 
-    // Migration fallback for existing user Yahya:
-    // If Yahya logs in and hasn't yet had his user-specific key written, migrate legacy global data
-    if (userId && (String(userId).includes('yahya') || userId === 'user_yahya')) {
-      const legacyRaw = localStorage.getItem(STORAGE_KEY);
-      if (legacyRaw) {
-        try {
-          const parsed = JSON.parse(legacyRaw);
-          const migrated = {
-            ...INITIAL_DATA,
-            ...parsed,
-            categories: parsed.categories?.length ? parsed.categories : DEFAULT_CATEGORIES,
-          };
-          localStorage.setItem(key, JSON.stringify(migrated));
-          return migrated;
-        } catch {
-          // ignore parsing error and continue
-        }
-      }
+    // For Yahya (or any primary user):
+    // 1. Check user-specific key
+    const userKey = getUserStorageKey(userId);
+    const userRaw = localStorage.getItem(userKey);
+    let userData = null;
+    if (userRaw) {
+      try { userData = JSON.parse(userRaw); } catch {}
     }
 
-    // For new users (like Emy Ali), provide a clean, blank slate
+    // 2. Check legacy global key ('masroufi_app_data_v1')
+    const legacyRaw = localStorage.getItem(STORAGE_KEY);
+    let legacyData = null;
+    if (legacyRaw) {
+      try { legacyData = JSON.parse(legacyRaw); } catch {}
+    }
+
+    // 3. Check alternate 'user_yahya' key
+    const yahyaKeyRaw = localStorage.getItem('masroufi_data_user_user_yahya');
+    let yahyaKeyData = null;
+    if (yahyaKeyRaw) {
+      try { yahyaKeyData = JSON.parse(yahyaKeyRaw); } catch {}
+    }
+
+    // Pick the storage candidate that contains the recorded expenses
+    const candidates = [userData, legacyData, yahyaKeyData].filter(Boolean);
+    const chosen = candidates.reduce((best, curr) => {
+      if (!best) return curr;
+      const bestCount = (best.expenses?.length || 0) + (best.fixedExpenses?.length || 0);
+      const currCount = (curr.expenses?.length || 0) + (curr.fixedExpenses?.length || 0);
+      return currCount >= bestCount ? curr : best;
+    }, null);
+
+    if (chosen) {
+      const finalData = {
+        ...INITIAL_DATA,
+        ...chosen,
+        categories: chosen.categories?.length ? chosen.categories : DEFAULT_CATEGORIES,
+      };
+      // Save it to this active user's key so future edits stay in sync
+      if (userId) {
+        localStorage.setItem(userKey, JSON.stringify(finalData));
+      }
+      return finalData;
+    }
+
     return {
       ...INITIAL_DATA,
       expenses: [],

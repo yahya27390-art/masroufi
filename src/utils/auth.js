@@ -18,7 +18,7 @@ const PRESEEDED_USERS = [
   {
     id: 'user_yahya',
     username: 'yahya9031',
-    email: 'yahya9031@masroufi.com',
+    email: 'yahya9031@gmail.com',
     fullName: 'يحيى (Yahya)',
     // SHA-256 of 'masroufi_secure_salt_2026_123456'
     passwordHash: 'c70034a742c38d82d49574a4f107f9c95b6c8aa51e7077a28e9a26315eeef398',

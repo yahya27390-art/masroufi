@@ -24,7 +24,7 @@ import {
 
 export default function App() {
   const [userSession, setUserSession] = useState(() => getCurrentSession());
-  const [data, setData] = useState(() => loadAppData(userSession?.userId));
+  const [data, setData] = useState(() => loadAppData(userSession?.userId, userSession?.email));
   const [selectedMonth, setSelectedMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [activeTab, setActiveTab] = useState('expenses'); // 'expenses', 'fixed', 'analytics'
   
@@ -37,9 +37,9 @@ export default function App() {
   // Reload user-isolated data when session changes
   useEffect(() => {
     if (userSession?.userId) {
-      setData(loadAppData(userSession.userId));
+      setData(loadAppData(userSession.userId, userSession.email));
     }
-  }, [userSession?.userId]);
+  }, [userSession?.userId, userSession?.email]);
 
   const toggleTheme = () => {
     setIsDark(prev => {
@@ -238,7 +238,7 @@ export default function App() {
       <AuthScreen
         onLoginSuccess={(session) => {
           setUserSession(session);
-          setData(loadAppData(session.userId));
+          setData(loadAppData(session.userId, session.email));
           showToast(`مرحباً بك، ${session.fullName || session.username || session.email}`);
         }}
         isDark={isDark}
