@@ -75,14 +75,12 @@ export default function AuthScreen({ onLoginSuccess, isDark, onToggleTheme }) {
           
           {/* Logo & Welcome Header */}
           <div className="text-center mb-6">
-            <div className="relative inline-block mb-3">
-              <div className="absolute inset-0 rounded-2xl bg-emerald-500/20 blur-xl"></div>
+            <div className="relative inline-block mb-4">
+              <div className="absolute inset-0 rounded-3xl bg-emerald-500/25 blur-2xl"></div>
               <img
                 src="/logo.png"
                 alt="شعار مصروفي"
-                className={`relative w-16 h-16 object-contain rounded-2xl p-1.5 border shadow-xl mx-auto ${
-                  isDark ? 'bg-slate-900 border-white/15' : 'bg-white border-slate-200'
-                }`}
+                className="relative w-28 h-28 object-contain rounded-3xl p-2 border border-white/20 shadow-2xl mx-auto bg-white"
               />
             </div>
 

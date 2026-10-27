@@ -51,7 +51,7 @@ export default function HeroCard({
             <img
               src="/logo.png"
               alt="مصروفي"
-              className="w-12 h-12 object-contain rounded-2xl bg-white/10 backdrop-blur-md p-1 border border-white/20 shadow-lg"
+              className="w-14 h-14 object-contain rounded-2xl bg-white p-1 border border-white/30 shadow-lg"
             />
             <div>
               <div className="flex items-center gap-2">

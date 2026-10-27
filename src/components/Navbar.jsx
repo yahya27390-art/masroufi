@@ -34,11 +34,7 @@ export default function Navbar({
           <img
             src="/logo.png"
             alt="شعار مصروفي"
-            className={`w-11 h-11 object-contain rounded-2xl shadow-md p-1 border transition ${
-              isDark
-                ? 'bg-white/10 border-white/15 shadow-teal-500/20'
-                : 'bg-slate-100 border-slate-200 shadow-slate-200'
-            }`}
+            className="w-12 h-12 object-contain rounded-2xl shadow-md p-1 border border-slate-200 bg-white"
           />
           <div>
             <div className="flex items-center gap-2">
